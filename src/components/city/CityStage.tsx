@@ -41,10 +41,14 @@ export function CityStage({
   const spots = scene.hotspots;
   const mobileSpot = isMobile ? spots[Math.min(index, spots.length - 1)] : undefined;
   const target: Focus = focus ?? (mobileSpot ? { x: mobileSpot.x, y: mobileSpot.y } : null);
-  const zoom = focus ? (isMobile ? 2.6 : 1.95) : mobileSpot ? 1.9 : 1;
+  const zoom = focus ? (isMobile ? 1.85 : 1.9) : mobileSpot ? 1.35 : 1;
 
-  const tx = target ? (50 - target.x) * zoom : 0;
-  const ty = target ? (50 - target.y) * zoom : 0;
+  // Keep the camera inside the artwork so scene edges never show.
+  const limit = (zoom - 1) * 50;
+  const clamp = (v: number) => Math.max(-limit, Math.min(limit, v));
+  const tx = target ? clamp((50 - target.x) * zoom) : 0;
+  const ty = target ? clamp((50 - target.y) * zoom) : 0;
+  const signScale = String(1 / zoom);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
@@ -78,12 +82,19 @@ export function CityStage({
         {/* foreground layer: signage + interactive buildings */}
         <div
           className="absolute inset-0"
-          style={{ transform: "translate3d(var(--px, 0px), var(--py, 0px), 0)" }}
+          style={{
+            transform: "translate3d(var(--px, 0px), var(--py, 0px), 0)",
+            ["--sign-scale" as string]: signScale,
+          }}
         >
           {scene.banner && (
             <div
               className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center"
-              style={{ left: `${scene.banner.x}%`, top: `${scene.banner.y}%` }}
+              style={{
+                left: `${scene.banner.x}%`,
+                top: `${scene.banner.y}%`,
+                scale: "var(--sign-scale, 1)",
+              }}
             >
               <p className="font-display text-2xl font-bold uppercase leading-none tracking-[0.16em] text-primary sm:text-4xl lg:text-5xl">
                 {scene.banner.title}

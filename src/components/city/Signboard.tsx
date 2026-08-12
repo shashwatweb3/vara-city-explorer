@@ -19,7 +19,11 @@ export function Signboard({
       className={`sign-plaque sign-plaque-hover group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-sm px-3 py-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:px-4 sm:py-2.5 ${
         active ? "border-primary/80" : ""
       }`}
-      style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
+      style={{
+        left: `${hotspot.x}%`,
+        top: `${hotspot.y}%`,
+        scale: "var(--sign-scale, 1)",
+      }}
     >
       <span
         className={`block whitespace-nowrap font-bold ${compact ? "text-[11px]" : "text-xs sm:text-sm"}`}
