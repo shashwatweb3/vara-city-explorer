@@ -5,11 +5,13 @@ export function Signboard({
   onSelect,
   active,
   compact,
+  centered,
 }: {
   hotspot: Hotspot;
   onSelect: (hotspot: Hotspot) => void;
   active?: boolean;
   compact?: boolean;
+  centered?: boolean;
 }) {
   return (
     <button
@@ -20,8 +22,8 @@ export function Signboard({
         active ? "border-primary/80" : ""
       }`}
       style={{
-        left: `${hotspot.x}%`,
-        top: `${hotspot.y}%`,
+        left: centered ? "50%" : `${hotspot.x}%`,
+        top: centered ? "50%" : `${hotspot.y}%`,
         scale: "var(--sign-scale, 1)",
       }}
     >
