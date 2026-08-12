@@ -41,7 +41,7 @@ export function CityStage({
   const spots = scene.hotspots;
   const mobileSpot = isMobile ? spots[Math.min(index, spots.length - 1)] : undefined;
   const target: Focus = focus ?? (mobileSpot ? { x: mobileSpot.x, y: mobileSpot.y } : null);
-  const zoom = focus ? (isMobile ? 1.85 : 1.9) : mobileSpot ? 1.35 : 1;
+  const zoom = focus ? (isMobile ? 1.9 : 1.9) : mobileSpot ? 1.55 : 1;
 
   // Keep the camera inside the artwork so scene edges never show.
   // translate() is applied before scale(), so on-screen shift is tx * zoom.
@@ -106,12 +106,12 @@ export function CityStage({
             </div>
           )}
 
-          {spots.map((h, i) => (
+          {(isMobile ? spots.filter((_, i) => i === index) : spots).map((h, i) => (
             <Signboard
               key={h.id}
               hotspot={h}
               onSelect={onSelect}
-              active={isMobile && i === index}
+              active={isMobile}
               compact={isMobile}
             />
           ))}
