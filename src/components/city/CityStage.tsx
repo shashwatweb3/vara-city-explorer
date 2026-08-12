@@ -113,6 +113,7 @@ export function CityStage({
               onSelect={onSelect}
               active={isMobile}
               compact={isMobile}
+              centered={isMobile}
             />
           ))}
         </div>
