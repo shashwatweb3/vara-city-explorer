@@ -28,13 +28,28 @@ export function CityHud({
         aria-label="Vara links"
         className="pointer-events-auto absolute right-4 top-4 flex items-center gap-4 text-[10px] uppercase tracking-[0.24em] text-foreground/70 sm:right-7 sm:top-6"
       >
-        <a href="https://vara.network/" target="_blank" rel="noreferrer noopener" className="hover:text-primary">
+        <a
+          href="https://vara.network/"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="relative transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-200 hover:text-primary hover:after:w-full"
+        >
           Vara
         </a>
-        <a href="https://wiki.vara.network/" target="_blank" rel="noreferrer noopener" className="hover:text-primary">
+        <a
+          href="https://wiki.vara.network/"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="relative transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-200 hover:text-primary hover:after:w-full"
+        >
           Docs
         </a>
-        <a href="https://eth.vara.network/" target="_blank" rel="noreferrer noopener" className="hover:text-primary">
+        <a
+          href="https://eth.vara.network/"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="relative transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-200 hover:text-primary hover:after:w-full"
+        >
           Eth
         </a>
       </nav>

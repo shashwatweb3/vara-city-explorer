@@ -13,9 +13,7 @@ import inSmartcup from "@/assets/in-smartcup.jpg";
 import inGrowstreams from "@/assets/in-growstreams.jpg";
 import inPolybaskets from "@/assets/in-polybaskets.jpg";
 
-export type Destination =
-  | { kind: "scene"; id: SceneId }
-  | { kind: "interior"; id: InteriorId };
+export type Destination = { kind: "scene"; id: SceneId } | { kind: "interior"; id: InteriorId };
 
 export type Hotspot = {
   id: string;
@@ -276,7 +274,11 @@ export const INTERIORS: Record<InteriorId, Interior> = {
     subtitle: "Send it now, run it later",
     body: "A Vara program can schedule a message to be executed later, which lets logic continue without anyone pressing a button.",
     flow: ["Now", "Schedule", "Later"],
-    points: ["Scheduled actions and automated state transitions.", "Cooldowns between moves.", "Timeouts when nobody responds."],
+    points: [
+      "Scheduled actions and automated state transitions.",
+      "Cooldowns between moves.",
+      "Timeouts when nobody responds.",
+    ],
     cta: {
       label: "Learn more",
       href: "https://wiki.vara.network/docs/developing/build/gstd/delayed-messages",

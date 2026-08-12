@@ -13,6 +13,8 @@ export function Signboard({
   compact?: boolean;
   centered?: boolean;
 }) {
+  // deterministic per-sign delay so lights never blink in unison
+  const dotDelay = (hotspot.id.length * 0.9 + hotspot.x * 0.45) % 6;
   return (
     <button
       type="button"
@@ -33,8 +35,15 @@ export function Signboard({
         {hotspot.label}
       </span>
       <span className="mt-0.5 flex items-center gap-1 text-[10px] tracking-[0.2em] text-primary/70 transition-colors group-hover:text-primary">
-        Enter <span aria-hidden="true">→</span>
+        Enter
+        <span
+          aria-hidden="true"
+          className="inline-block transition-transform duration-200 ease-out group-hover:translate-x-0.5"
+        >
+          →
+        </span>
       </span>
+      <span aria-hidden="true" className="sign-dot" style={{ animationDelay: `${dotDelay}s` }} />
     </button>
   );
 }

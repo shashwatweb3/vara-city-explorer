@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { AmbientScene } from "./Ambient";
 import { Signboard } from "./Signboard";
 import type { Hotspot, Scene } from "@/lib/city-data";
 
@@ -31,8 +32,8 @@ export function CityStage({
     const onMove = (e: PointerEvent) => {
       const nx = e.clientX / window.innerWidth - 0.5;
       const ny = e.clientY / window.innerHeight - 0.5;
-      el.style.setProperty("--px", `${nx * 22}px`);
-      el.style.setProperty("--py", `${ny * 12}px`);
+      el.style.setProperty("--px", `${nx * 44}px`);
+      el.style.setProperty("--py", `${ny * 22}px`);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
@@ -51,6 +52,10 @@ export function CityStage({
   const ty = target ? clamp((50 - target.y) * zoom) : 0;
   const signScale = String(1 / zoom);
 
+  const parallax = (bx: number, by: number) => ({
+    transform: `translate3d(calc(var(--px, 0px) * ${bx}), calc(var(--py, 0px) * ${by}), 0)`,
+  });
+
   return (
     <div className="absolute inset-0 overflow-hidden bg-ink">
       <div
@@ -62,32 +67,22 @@ export function CityStage({
           willChange: "transform",
         }}
       >
-        {/* background / midground artwork */}
-        <div
-          className="absolute inset-0"
-          style={{
-            transform: "translate3d(calc(var(--px, 0px) * 0.35), calc(var(--py, 0px) * 0.35), 0)",
-          }}
-        >
+        {/* background: artwork, paper grain, distant birds — moves very slowly */}
+        <div className="absolute inset-0" style={parallax(0.45, 0.45)}>
           <img
             src={scene.image}
             alt={`Illustrated view of ${scene.name} in Vara City`}
             width={1920}
             height={1088}
-            className="h-full w-full scale-[1.06] object-cover"
+            className="city-drift h-full w-full scale-[1.06] object-cover"
           />
           <div className="grain-overlay" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/35" />
+          <AmbientScene sceneId={scene.id} plane="bg" />
         </div>
 
-        {/* foreground layer: signage + interactive buildings */}
-        <div
-          className="absolute inset-0"
-          style={{
-            transform: "translate3d(var(--px, 0px), var(--py, 0px), 0)",
-            ["--sign-scale" as string]: signScale,
-          }}
-        >
+        {/* midground: environmental typography + tech data particles — moves a little more */}
+        <div className="absolute inset-0" style={parallax(0.8, 0.8)}>
           {scene.banner && (
             <div
               className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-center"
@@ -105,7 +100,16 @@ export function CityStage({
               </p>
             </div>
           )}
+          <AmbientScene sceneId={scene.id} plane="mid" />
+        </div>
 
+        {/* foreground: crossing pedestrian + vehicle — moves with the mouse */}
+        <div className="absolute inset-0" style={parallax(1.35, 1.35)}>
+          <AmbientScene sceneId={scene.id} plane="fg" />
+        </div>
+
+        {/* interactive layer: buildings stay stable and clickable */}
+        <div className="absolute inset-0" style={{ ["--sign-scale" as string]: signScale }}>
           {(isMobile ? spots.filter((_, i) => i === index) : spots).map((h, i) => (
             <Signboard
               key={h.id}

@@ -5,13 +5,7 @@ import { CityHud } from "@/components/city/CityHud";
 import { Intro } from "@/components/city/Intro";
 import { InteriorScene } from "@/components/city/InteriorScene";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import {
-  INTERIORS,
-  SCENES,
-  type Hotspot,
-  type InteriorId,
-  type SceneId,
-} from "@/lib/city-data";
+import { INTERIORS, SCENES, type Hotspot, type InteriorId, type SceneId } from "@/lib/city-data";
 
 const TITLE = "Vara City — Explore the Vara Network, one building at a time";
 const DESC =
@@ -37,9 +31,12 @@ function Index() {
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("intro");
   const [leavingIntro, setLeavingIntro] = useState(false);
+  const [interiorLeaving, setInteriorLeaving] = useState(false);
   const [sceneId, setSceneId] = useState<SceneId>("street");
   const [interiorId, setInteriorId] = useState<InteriorId | null>(null);
   const [focus, setFocus] = useState<{ x: number; y: number } | null>(null);
+  // during a scene-to-scene hop the city fades through ink — no hard cuts
+  const [veil, setVeil] = useState(false);
   const timers = useRef<number[]>([]);
 
   const later = useCallback(
@@ -71,41 +68,60 @@ function Index() {
     return () => window.removeEventListener("keydown", onKey);
   }, [phase, enterCity]);
 
-  const goScene = useCallback((id: SceneId) => {
-    setFocus(null);
-    setInteriorId(null);
-    setPhase("city");
-    setSceneId(id);
-  }, []);
-
-  const onSelect = useCallback(
-    (hotspot: Hotspot) => {
-      setFocus({ x: hotspot.x, y: hotspot.y });
-      if (hotspot.to.kind === "scene") {
-        const next = hotspot.to.id;
+  // Walk the city camera over to another scene: fade out, swap artwork, fade back in.
+  const goScene = useCallback(
+    (id: SceneId, viaFocus?: { x: number; y: number }) => {
+      if (viaFocus) setFocus(viaFocus);
+      if (viaFocus) {
+        // let the camera begin its glide toward the sign, then crossfade
+        later(() => setVeil(true), 560);
         later(() => {
-          setSceneId(next);
+          setSceneId(id);
           setFocus(null);
-        }, 780);
+          setInteriorId(null);
+          setPhase("city");
+        }, 840);
+        later(() => setVeil(false), 1280);
       } else {
-        const next = hotspot.to.id;
+        setVeil(true);
         later(() => {
-          setInteriorId(next);
-          setPhase("interior");
-        }, 820);
+          setSceneId(id);
+          setFocus(null);
+          setInteriorId(null);
+          setPhase("city");
+        }, 300);
+        later(() => setVeil(false), 780);
       }
     },
     [later],
   );
 
+  const onSelect = useCallback(
+    (hotspot: Hotspot) => {
+      if (hotspot.to.kind === "scene") {
+        goScene(hotspot.to.id, { x: hotspot.x, y: hotspot.y });
+      } else {
+        const next = hotspot.to.id;
+        setFocus({ x: hotspot.x, y: hotspot.y });
+        later(() => {
+          setInteriorId(next);
+          setPhase("interior");
+        }, 760);
+      }
+    },
+    [goScene, later],
+  );
+
   const backToCity = useCallback(() => {
     const from = interiorId ? INTERIORS[interiorId].from : sceneId;
-    setPhase("city");
-    setSceneId(from);
+    setInteriorLeaving(true);
     later(() => {
-      setFocus(null);
+      setPhase("city");
       setInteriorId(null);
-    }, 60);
+      setSceneId(from);
+      setFocus(null);
+    }, 320);
+    later(() => setInteriorLeaving(false), 900);
   }, [interiorId, sceneId, later]);
 
   const interior = interiorId ? INTERIORS[interiorId] : null;
@@ -115,14 +131,20 @@ function Index() {
       <CityStage
         scene={SCENES[sceneId]}
         focus={focus}
-        hidden={phase === "interior"}
+        hidden={phase === "interior" || veil}
         onSelect={onSelect}
       />
 
       <CityHud sceneId={sceneId} onGo={goScene} dim={phase !== "city"} />
 
       {phase === "interior" && interior && (
-        <div className="absolute inset-0 z-30 animate-soft-rise">
+        <div
+          className="absolute inset-0 z-30 animate-soft-rise transition-opacity duration-300"
+          style={{
+            opacity: interiorLeaving ? 0 : 1,
+            pointerEvents: interiorLeaving ? "none" : "auto",
+          }}
+        >
           <InteriorScene interior={interior} onBack={backToCity} />
         </div>
       )}

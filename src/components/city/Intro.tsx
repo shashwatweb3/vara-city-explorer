@@ -25,7 +25,10 @@ export function Intro({ onEnter, leaving }: { onEnter: () => void; leaving: bool
           onClick={onEnter}
           className="sign-plaque sign-plaque-hover mt-12 inline-flex min-h-12 items-center rounded-sm px-7 py-3.5 text-sm font-bold"
         >
-          Enter city <span aria-hidden="true" className="ml-3">→</span>
+          Enter city{" "}
+          <span aria-hidden="true" className="ml-3">
+            →
+          </span>
         </button>
         <p className="mt-6 text-[10px] uppercase tracking-[0.3em] text-foreground/45">
           Press enter or click to skip

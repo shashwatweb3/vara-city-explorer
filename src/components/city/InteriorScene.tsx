@@ -1,13 +1,7 @@
 import type { Interior } from "@/lib/city-data";
 import { VaraMark } from "./VaraMark";
 
-export function InteriorScene({
-  interior,
-  onBack,
-}: {
-  interior: Interior;
-  onBack: () => void;
-}) {
+export function InteriorScene({ interior, onBack }: { interior: Interior; onBack: () => void }) {
   return (
     <section className="absolute inset-0 overflow-y-auto bg-ink" aria-label={interior.title}>
       <div className="pointer-events-none absolute inset-0">
@@ -17,7 +11,7 @@ export function InteriorScene({
           loading="lazy"
           width={1920}
           height={1088}
-          className="h-full w-full object-cover"
+          className="city-drift-slow h-full w-full object-cover"
         />
         <div className="grain-overlay" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/75 to-ink/25" />
@@ -82,16 +76,28 @@ export function InteriorScene({
               href={interior.cta.href}
               target="_blank"
               rel="noreferrer noopener"
-              className="sign-plaque sign-plaque-hover inline-flex min-h-11 items-center rounded-sm px-5 py-3 text-xs font-bold"
+              className="sign-plaque sign-plaque-hover group inline-flex min-h-11 items-center rounded-sm px-5 py-3 text-xs font-bold"
             >
-              {interior.cta.label} <span aria-hidden="true" className="ml-2">→</span>
+              {interior.cta.label}{" "}
+              <span
+                aria-hidden="true"
+                className="ml-2 inline-block transition-transform duration-200 ease-out group-hover:translate-x-1"
+              >
+                →
+              </span>
             </a>
             <button
               type="button"
               onClick={onBack}
-              className="inline-flex min-h-11 items-center rounded-sm border border-border px-5 py-3 font-display text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-colors hover:border-primary/60 hover:text-primary"
+              className="group inline-flex min-h-11 items-center rounded-sm border border-border px-5 py-3 font-display text-xs font-bold uppercase tracking-[0.14em] text-foreground/80 transition-colors hover:border-primary/60 hover:text-primary"
             >
-              <span aria-hidden="true" className="mr-2">←</span> Back to city
+              <span
+                aria-hidden="true"
+                className="mr-2 inline-block transition-transform duration-200 ease-out group-hover:-translate-x-1"
+              >
+                ←
+              </span>{" "}
+              Back to city
             </button>
           </div>
         </div>
