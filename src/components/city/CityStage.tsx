@@ -44,7 +44,8 @@ export function CityStage({
   const zoom = focus ? (isMobile ? 1.85 : 1.9) : mobileSpot ? 1.35 : 1;
 
   // Keep the camera inside the artwork so scene edges never show.
-  const limit = (zoom - 1) * 50;
+  // translate() is applied before scale(), so on-screen shift is tx * zoom.
+  const limit = ((zoom - 1) * 50) / zoom;
   const clamp = (v: number) => Math.max(-limit, Math.min(limit, v));
   const tx = target ? clamp((50 - target.x) * zoom) : 0;
   const ty = target ? clamp((50 - target.y) * zoom) : 0;
