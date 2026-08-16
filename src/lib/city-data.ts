@@ -3,6 +3,7 @@ import scenePlaza from "@/assets/scene-plaza.jpg";
 import sceneFeatures from "@/assets/scene-features.jpg";
 import sceneEcosystem from "@/assets/scene-ecosystem.jpg";
 import sceneBridge from "@/assets/scene-bridge.jpg";
+import sceneBuilders from "@/assets/scene-builders.jpg";
 import inActor from "@/assets/in-actor.jpg";
 import inDelayed from "@/assets/in-delayed.jpg";
 import inGasless from "@/assets/in-gasless.jpg";
@@ -12,6 +13,9 @@ import inRivrdex from "@/assets/in-rivrdex.jpg";
 import inSmartcup from "@/assets/in-smartcup.jpg";
 import inGrowstreams from "@/assets/in-growstreams.jpg";
 import inPolybaskets from "@/assets/in-polybaskets.jpg";
+import inFaucet from "@/assets/in-faucet.jpg";
+import inGovernance from "@/assets/in-governance.jpg";
+import inSkills from "@/assets/in-skills.jpg";
 
 export type Destination = { kind: "scene"; id: SceneId } | { kind: "interior"; id: InteriorId };
 
@@ -25,7 +29,7 @@ export type Hotspot = {
   to: Destination;
 };
 
-export type SceneId = "street" | "plaza" | "features" | "ecosystem" | "bridge";
+export type SceneId = "street" | "plaza" | "features" | "ecosystem" | "bridge" | "builders";
 
 export type Scene = {
   id: SceneId;
@@ -68,6 +72,14 @@ export const SCENES: Record<SceneId, Scene> = {
         y: 62,
         to: { kind: "scene", id: "ecosystem" },
       },
+      {
+        id: "to-builders",
+        label: "Builders Street",
+        hint: "Faucet, governance, full-stack skills",
+        x: 68,
+        y: 40,
+        to: { kind: "scene", id: "builders" },
+      },
     ],
   },
   plaza: {
@@ -108,6 +120,14 @@ export const SCENES: Record<SceneId, Scene> = {
         x: 30,
         y: 78,
         to: { kind: "scene", id: "street" },
+      },
+      {
+        id: "plaza-builders",
+        label: "Builders Street",
+        hint: "Start building for free",
+        x: 50,
+        y: 34,
+        to: { kind: "scene", id: "builders" },
       },
     ],
   },
@@ -226,6 +246,47 @@ export const SCENES: Record<SceneId, Scene> = {
       },
     ],
   },
+  builders: {
+    id: "builders",
+    name: "Builders Street",
+    caption: "Builders Street",
+    image: sceneBuilders,
+    banner: { title: "Builders Street", sub: "Zero up-front cost", x: 50, y: 12 },
+    hotspots: [
+      {
+        id: "b-faucet",
+        label: "The Faucet",
+        hint: "100 VARA to start building",
+        x: 17,
+        y: 44,
+        to: { kind: "interior", id: "faucet" },
+      },
+      {
+        id: "b-governance",
+        label: "Referendum Hall",
+        hint: "Have a real say in where Vara goes",
+        x: 50,
+        y: 39,
+        to: { kind: "interior", id: "governance" },
+      },
+      {
+        id: "b-skills",
+        label: "Skills Workshop",
+        hint: "Full dApp stack, one prompt",
+        x: 84,
+        y: 36,
+        to: { kind: "interior", id: "skills" },
+      },
+      {
+        id: "builders-plaza",
+        label: "Vara Plaza",
+        hint: "Back to the centre",
+        x: 33,
+        y: 88,
+        to: { kind: "scene", id: "plaza" },
+      },
+    ],
+  },
 };
 
 export type InteriorId =
@@ -237,7 +298,10 @@ export type InteriorId =
   | "rivrdex"
   | "smartcup"
   | "growstreams"
-  | "polybaskets";
+  | "polybaskets"
+  | "faucet"
+  | "governance"
+  | "skills";
 
 export type Interior = {
   id: InteriorId;
@@ -400,5 +464,51 @@ export const INTERIORS: Record<InteriorId, Interior> = {
     image: inPolybaskets,
     from: "ecosystem",
     badge: "Built on Vara",
+  },
+  faucet: {
+    id: "faucet",
+    title: "The Faucet",
+    subtitle: "Building on Vara mainnet is free",
+    body: "Take 100 VARA from the faucet, deploy a program, then cover your users' gas with vouchers — and ship an app people can actually use. Zero up-front cost.",
+    flow: ["100 VARA", "Deploy", "Ship"],
+    points: [
+      "100 VARA from the faucet to get started.",
+      "Deploy a program straight to Vara mainnet.",
+      "Vouchers let your app cover your users' gas.",
+    ],
+    cta: { label: "Open Gear IDEA", href: "https://idea.gear-tech.io" },
+    image: inFaucet,
+    from: "builders",
+    badge: "Zero up-front cost",
+  },
+  governance: {
+    id: "governance",
+    title: "Referendum Hall",
+    subtitle: "A real say in where Vara goes",
+    body: "97.6% of the community want a real say in Vara's direction — 43.9% on everything, 53.7% on the big decisions. So the question becomes concrete: if a referendum went live on Vara, what should it be about?",
+    flow: ["Propose", "Community vote", "On-chain referendum"],
+    points: [
+      "Reply with one line: TOPIC — why it matters.",
+      "The strongest proposals go to a community vote.",
+      "Winners get drafted as real, on-chain referenda.",
+    ],
+    cta: { label: "Open SubSquare", href: "http://vara.subsquare.io" },
+    image: inGovernance,
+    from: "builders",
+  },
+  skills: {
+    id: "skills",
+    title: "Skills Workshop",
+    subtitle: "Vara skills cover the full dApp stack",
+    body: "Contract. Frontend. Wallet. Tokens. Indexer. One agent, one prompt, full stack — the Vara skills repository gives an agent everything it needs to build across the whole stack.",
+    flow: ["One prompt", "One agent", "Full stack"],
+    points: [
+      "Contract, frontend and wallet covered together.",
+      "Tokens and indexer included in the same stack.",
+      "Open source on GitHub, ready for your agent.",
+    ],
+    cta: { label: "View vara-skills", href: "https://github.com/gear-foundation/vara-skills" },
+    image: inSkills,
+    from: "builders",
   },
 };

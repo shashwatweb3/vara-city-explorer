@@ -1,7 +1,7 @@
 import { SCENES, type SceneId } from "@/lib/city-data";
 import { VaraMark } from "./VaraMark";
 
-const ROUTE: SceneId[] = ["street", "plaza", "features", "ecosystem", "bridge"];
+const ROUTE: SceneId[] = ["street", "plaza", "features", "builders", "ecosystem", "bridge"];
 
 export function CityHud({
   sceneId,
