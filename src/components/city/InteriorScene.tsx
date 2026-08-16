@@ -24,7 +24,7 @@ export function InteriorScene({ interior, onBack }: { interior: Interior; onBack
               <VaraMark className="h-3.5 w-3.5" /> {interior.badge}
             </p>
           )}
-          <h1 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-foreground sm:text-6xl">
+          <h1 className="font-display text-3xl font-bold uppercase leading-[0.95] tracking-tight text-foreground sm:text-4xl lg:text-6xl">
             {interior.title}
           </h1>
           <p className="mt-3 text-sm uppercase tracking-[0.28em] text-primary">

@@ -18,7 +18,6 @@ export function Intro({ onEnter, leaving }: { onEnter: () => void; leaving: bool
         <video
           className="absolute inset-0 h-full w-full object-cover"
           src="/videos/vara-city-intro.mp4"
-          poster="/preview.jpg"
           autoPlay
           muted
           loop

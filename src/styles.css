@@ -170,6 +170,32 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
+/*
+ * Preserved coordinate system for the illustrated scenes.
+ * The canvas always keeps the artwork's aspect ratio and covers the viewport,
+ * so the illustration scales proportionally (crop at the edges, never stretch)
+ * and every sign/banner/ambient element positioned in % stays anchored to the
+ * same spot on its building at every screen size.
+ */
+.scene-canvas {
+  --art-ratio: 1.7647; /* 1920 × 1088 */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: max(100vw, calc(100vh * var(--art-ratio)));
+  height: max(100vh, calc(100vw / var(--art-ratio)));
+  /* container units let ambient life cross the full artwork width on any screen */
+  container-type: size;
+}
+
+@supports (height: 100dvh) {
+  .scene-canvas {
+    width: max(100vw, calc(100dvh * var(--art-ratio)));
+    height: max(100dvh, calc(100vw / var(--art-ratio)));
+  }
+}
+
 @utility sign-plaque {
   position: relative;
   font-family: var(--font-display);
@@ -275,45 +301,47 @@
   will-change: transform, opacity;
 }
 
-/* mostly on-screen: cross, dwell, fade, loop back */
+/* mostly on-screen: cross, dwell, fade, loop back.
+   cqw units are % of the scene canvas, so crossings span the whole artwork
+   at every viewport (they fall back to viewport units without container support). */
 @keyframes amb-rl {
   0% {
-    transform: translate3d(112vw, 0, 0);
+    transform: translate3d(112cqw, 0, 0);
     opacity: 0;
   }
   4% {
     opacity: 0.95;
   }
   62% {
-    transform: translate3d(-14vw, 0, 0);
+    transform: translate3d(-14cqw, 0, 0);
   }
   90% {
     opacity: 0.95;
   }
   96%,
   100% {
-    transform: translate3d(-14vw, 0, 0);
+    transform: translate3d(-14cqw, 0, 0);
     opacity: 0;
   }
 }
 
 @keyframes amb-lr {
   0% {
-    transform: translate3d(-14vw, 0, 0);
+    transform: translate3d(-14cqw, 0, 0);
     opacity: 0;
   }
   4% {
     opacity: 0.95;
   }
   62% {
-    transform: translate3d(112vw, 0, 0);
+    transform: translate3d(112cqw, 0, 0);
   }
   90% {
     opacity: 0.95;
   }
   96%,
   100% {
-    transform: translate3d(112vw, 0, 0);
+    transform: translate3d(112cqw, 0, 0);
     opacity: 0;
   }
 }
@@ -444,6 +472,17 @@
   }
 }
 
+/* sequential-scene nav (phones, tall/narrow tablets): base keeps it inside the
+   viewport at any width; the mobile block below tunes spacing and safe areas */
+.mobile-hotspot-nav {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem);
+  gap: 0.25rem;
+}
+
+.mobile-hotspot-name {
+  display: none;
+}
+
 /* tone the ambient life down on small screens */
 @media (max-width: 767px) {
   .ambient-cross .bird-svg,
@@ -456,5 +495,87 @@
   .data-particle {
     width: 2.5px;
     height: 2.5px;
+  }
+
+  .mobile-sign-plaque {
+    min-width: 9.5rem;
+    max-width: min(10.5rem, calc(100vw - 2rem));
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    box-sizing: border-box;
+  }
+
+  .city-hud-brand {
+    left: 0.875rem;
+    top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+  }
+
+  .city-hud-links {
+    right: 0.875rem;
+    top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+    gap: 0.6rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+  }
+
+  /* comfortable tap area for the small top links */
+  .city-hud-links a {
+    padding: 0.7rem 0.4rem;
+  }
+
+  /* street navigation: a compact, swipeable row above the hotspot nav —
+     without it, scenes with no outgoing sign (Feature / Ecosystem Street)
+     would be dead ends on phones */
+  .city-hud-places {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 5.9rem);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    padding-inline: 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 18px,
+      black calc(100% - 18px),
+      transparent
+    );
+  }
+
+  .city-hud-places::-webkit-scrollbar {
+    display: none;
+  }
+
+  .city-hud-places button {
+    flex: none;
+    min-height: 2.5rem;
+    padding-inline: 0.55rem;
+  }
+
+  .city-hud-explore {
+    display: none;
+  }
+
+  .mobile-hotspot-nav {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: min(100%, calc(100vw - 2rem));
+    padding-inline: 0.5rem;
+    justify-content: center;
+  }
+
+  .mobile-hotspot-name {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--foreground);
   }
 }

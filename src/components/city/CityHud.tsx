@@ -17,7 +17,7 @@ export function CityHud({
       className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-500"
       style={{ opacity: dim ? 0 : 1 }}
     >
-      <div className="pointer-events-auto absolute left-4 top-4 flex items-center gap-2 sm:left-7 sm:top-6">
+      <div className="pointer-events-auto absolute left-4 top-4 flex items-center gap-2 sm:left-7 sm:top-6 city-hud-brand">
         <VaraMark className="h-5 w-5 text-primary" />
         <span className="font-display text-[11px] font-bold uppercase tracking-[0.28em] text-foreground">
           Vara City
@@ -26,7 +26,7 @@ export function CityHud({
 
       <nav
         aria-label="Vara links"
-        className="pointer-events-auto absolute right-4 top-4 flex items-center gap-4 text-[10px] uppercase tracking-[0.24em] text-foreground/70 sm:right-7 sm:top-6"
+        className="pointer-events-auto absolute right-4 top-4 flex items-center gap-4 text-[10px] uppercase tracking-[0.24em] text-foreground/70 sm:right-7 sm:top-6 city-hud-links"
       >
         <a
           href="https://vara.network/"
@@ -56,7 +56,7 @@ export function CityHud({
 
       <nav
         aria-label="Places in Vara City"
-        className="pointer-events-auto absolute bottom-5 left-4 flex flex-wrap gap-x-4 gap-y-2 pr-24 sm:left-7 sm:bottom-7"
+        className="pointer-events-auto absolute bottom-5 left-4 flex flex-wrap gap-x-4 gap-y-2 sm:left-7 sm:bottom-7 sm:pr-24 city-hud-places"
       >
         {ROUTE.map((id) => (
           <button
@@ -73,7 +73,7 @@ export function CityHud({
         ))}
       </nav>
 
-      <p className="absolute bottom-5 right-4 text-[10px] uppercase tracking-[0.32em] text-foreground/45 sm:bottom-7 sm:right-7">
+      <p className="absolute bottom-5 right-4 text-[10px] uppercase tracking-[0.32em] text-foreground/45 sm:bottom-7 sm:right-7 city-hud-explore">
         Explore
       </p>
     </div>

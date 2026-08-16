@@ -5,13 +5,11 @@ export function Signboard({
   onSelect,
   active,
   compact,
-  centered,
 }: {
   hotspot: Hotspot;
   onSelect: (hotspot: Hotspot) => void;
   active?: boolean;
   compact?: boolean;
-  centered?: boolean;
 }) {
   // deterministic per-sign delay so lights never blink in unison
   const dotDelay = (hotspot.id.length * 0.9 + hotspot.x * 0.45) % 6;
@@ -22,10 +20,10 @@ export function Signboard({
       aria-label={`Open ${hotspot.label} — ${hotspot.hint}`}
       className={`sign-plaque sign-plaque-hover group absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-sm px-3 py-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:px-4 sm:py-2.5 ${
         active ? "border-primary/80" : ""
-      }`}
+      } ${compact ? "mobile-sign-plaque" : ""}`}
       style={{
-        left: centered ? "50%" : `${hotspot.x}%`,
-        top: centered ? "50%" : `${hotspot.y}%`,
+        left: `${hotspot.x}%`,
+        top: `${hotspot.y}%`,
         scale: "var(--sign-scale, 1)",
       }}
     >

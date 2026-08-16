@@ -35,8 +35,12 @@ type AmbientConfig = {
 const CONFIG: Record<SceneId, AmbientConfig> = {
   street: {
     birds: [
-      { top: 12, duration: 40, delay: -6 },
+      { top: 12, duration: 40, delay: -6, tint: "0.6" },
       { top: 8, duration: 52, delay: -26, fromLeft: true, tint: "0.55" },
+    ],
+    particles: [
+      { x: 56, y: 32, count: 4 },
+      { x: 62, y: 28, count: 3 },
     ],
     cross: {
       pedestrian: { top: 92, duration: 44, delay: -8 },

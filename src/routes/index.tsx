@@ -34,6 +34,9 @@ function Index() {
   const [interiorLeaving, setInteriorLeaving] = useState(false);
   const [sceneId, setSceneId] = useState<SceneId>("street");
   const [interiorId, setInteriorId] = useState<InteriorId | null>(null);
+  // scene the current interior was opened from, so "Back to city" returns
+  // the visitor where they actually came from (e.g. the Bridge, not Feature Street)
+  const [interiorFrom, setInteriorFrom] = useState<SceneId | null>(null);
   const [focus, setFocus] = useState<{ x: number; y: number } | null>(null);
   // during a scene-to-scene hop the city fades through ink — no hard cuts
   const [veil, setVeil] = useState(false);
@@ -79,6 +82,7 @@ function Index() {
           setSceneId(id);
           setFocus(null);
           setInteriorId(null);
+          setInteriorFrom(null);
           setPhase("city");
         }, 840);
         later(() => setVeil(false), 1280);
@@ -88,6 +92,7 @@ function Index() {
           setSceneId(id);
           setFocus(null);
           setInteriorId(null);
+          setInteriorFrom(null);
           setPhase("city");
         }, 300);
         later(() => setVeil(false), 780);
@@ -102,6 +107,7 @@ function Index() {
         goScene(hotspot.to.id, { x: hotspot.x, y: hotspot.y });
       } else {
         const next = hotspot.to.id;
+        setInteriorFrom(sceneId);
         setFocus({ x: hotspot.x, y: hotspot.y });
         later(() => {
           setInteriorId(next);
@@ -109,20 +115,21 @@ function Index() {
         }, 760);
       }
     },
-    [goScene, later],
+    [goScene, later, sceneId],
   );
 
   const backToCity = useCallback(() => {
-    const from = interiorId ? INTERIORS[interiorId].from : sceneId;
+    const from = interiorFrom ?? (interiorId ? INTERIORS[interiorId].from : sceneId);
     setInteriorLeaving(true);
     later(() => {
       setPhase("city");
       setInteriorId(null);
+      setInteriorFrom(null);
       setSceneId(from);
       setFocus(null);
     }, 320);
     later(() => setInteriorLeaving(false), 900);
-  }, [interiorId, sceneId, later]);
+  }, [interiorFrom, interiorId, sceneId, later]);
 
   const interior = interiorId ? INTERIORS[interiorId] : null;
 
