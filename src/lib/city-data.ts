@@ -257,8 +257,8 @@ export const SCENES: Record<SceneId, Scene> = {
         id: "b-faucet",
         label: "The Faucet",
         hint: "100 VARA to start building",
-        x: 17,
-        y: 44,
+        x: 23,
+        y: 42,
         to: { kind: "interior", id: "faucet" },
       },
       {
@@ -274,7 +274,7 @@ export const SCENES: Record<SceneId, Scene> = {
         label: "Skills Workshop",
         hint: "Full dApp stack, one prompt",
         x: 84,
-        y: 36,
+        y: 33,
         to: { kind: "interior", id: "skills" },
       },
       {
