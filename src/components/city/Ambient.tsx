@@ -75,6 +75,17 @@ const CONFIG: Record<SceneId, AmbientConfig> = {
     ],
     particles: [{ x: 50, y: 62, count: 4 }],
   },
+  builders: {
+    birds: [
+      { top: 10, duration: 44, delay: -14 },
+      { top: 14, duration: 52, delay: -32, fromLeft: true, tint: "0.55" },
+    ],
+    particles: [
+      { x: 17, y: 58, count: 5 },
+      { x: 84, y: 52, count: 4 },
+    ],
+    cross: { pedestrian: { top: 91, duration: 44, delay: -10 } },
+  },
 };
 
 function Bird({ def }: { def: BirdDef }) {
